@@ -1,0 +1,24 @@
+
+- name: add kubernetes gpg key
+  apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: add docker repository(ubuntu eoan workaround)
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+
+- name: install docker
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - kubeadm
+
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+- name: Disable swap
+  command: swapoff -a

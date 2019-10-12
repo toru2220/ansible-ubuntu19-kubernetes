@@ -1,0 +1,3 @@
+ansible_distribution: ubuntu
+ansible_distribution_release: disco
+

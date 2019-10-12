@@ -1,0 +1,24 @@
+
+- name: remove ansible repository(ubuntu eoan workaround)
+  apt_repository:
+    repo: deb http://ppa.launchpad.net/ansible/ansible/ubuntu eoan mains
+    state: absent
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_release == "eoan")
+
+- name: install packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - ntp
+    - git
+    - wget
+    - zip
+    - unzip
+    - curl
+    - apt-transport-https
+    - ca-certificates
+    - gnupg-agent
+    - software-properties-common

@@ -1,0 +1,28 @@
+
+- name: remove docker repository(ubuntu eoan workaround)
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu eoan stable
+    state: absent
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_release == "eoan")
+
+- name: add docker gpg key
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+- name: add docker repository(ubuntu eoan workaround)
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu disco stable
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_release == "eoan")
+
+- name: add docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution}} {{ansible_distribution_release}} stable
+  when: (ansible_distribution == "Ubuntu" and ansible_distribution_release != "eoan")
+
+- name: install docker
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce

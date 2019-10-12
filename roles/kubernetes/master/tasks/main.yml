@@ -1,0 +1,23 @@
+
+- name: reset Kubernetes component
+  shell: "kubeadm reset --force"
+
+- name: init kubernetes
+  shell: "kubeadm init --pod-network-cidr=10.114.0.0/16"
+
+- name: Ensure .kube directory exists.
+  file:
+    path: /root/.kube
+    state: directory
+    
+- name: copy admin.conf 
+  copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/root/.kube/config"
+    owner: "root"
+    group: "root"
+    mode: 0755
+    remote_src: true
+
+- name: install flannel
+  shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
